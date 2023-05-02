@@ -5,8 +5,10 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.ionov.library.application.models.Book;
+import ru.ionov.library.application.models.Person;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BookDAO {
@@ -19,42 +21,50 @@ public class BookDAO {
 
     public List<Book> index() {
 
-        return jdbcTemplate.query("SELECT id_book,name_of_book,full_name,publishing_year FROM book",new BeanPropertyRowMapper<>(Book.class));
+        return jdbcTemplate.query("SELECT * FROM book",new BeanPropertyRowMapper<>(Book.class));
     }
 
 
-    public Book show(int id_book) {
-        return jdbcTemplate.query("SELECT id_book,name_of_book,full_name,publishing_year FROM book WHERE id_book=?",new Object[]{id_book},new BeanPropertyRowMapper<>(Book.class))
+    public Book show(int id) {
+        return jdbcTemplate.query("SELECT * FROM book WHERE id=?",new Object[]{id},new BeanPropertyRowMapper<>(Book.class))
                 .stream().findAny().orElse(null);
     }
 
-    public List<Book> showBusyBooks(int id_person) {
-                return jdbcTemplate.query("select book.name_of_book,book.full_name,book.publishing_year from book join person on book.id_person = person.id_person where book.id_person =?",
-                        new Object[]{id_person},new BeanPropertyRowMapper<>(Book.class));
+//    public List<Book> showBusyBooks(int id) {
+//                return jdbcTemplate.query("select book.name_of_book,book.author,book.publishing_year from book join person on book.person_id = person.id where book.id =?",
+//                        new Object[]{id},new BeanPropertyRowMapper<>(Book.class));
+//    }
+
+    public List<Book> getBooksByPersonId(int id) {
+        return jdbcTemplate.query("select * from book where person_id =?",
+                new Object[]{id},new BeanPropertyRowMapper<>(Book.class));
+    }
+
+    public Optional<Person> getBookOwner(int id) {
+        return jdbcTemplate.query("select person.* from book join person on book.person_id = person.id where book.id = ?",
+                new Object[]{id},new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
     }
 
     public void save(Book book) {
-        jdbcTemplate.update("INSERT INTO book(name_of_book, full_name, publishing_year) VALUES (?,?,?)",
-                book.getName_of_book(),book.getFull_name(),book.getPublishing_year());
+        jdbcTemplate.update("INSERT INTO book(name_of_book, author, publishing_year) VALUES (?,?,?)",
+                book.getName_of_book(),book.getAuthor(),book.getPublishing_year());
     }
-    public void update(int id_book, Book updatedBook) {
-        jdbcTemplate.update("UPDATE book set name_of_book=?, full_name=?,publishing_year=? where id_book=?",
-                updatedBook.getName_of_book(), updatedBook.getFull_name(),
-                updatedBook.getPublishing_year(), id_book);
-    }
-
-    public void updateId_person(int id_book, Book updatedBook) {
-        jdbcTemplate.update("UPDATE book set id_person=? where id_book=?",
-                updatedBook.getId_person(),id_book);
+    public void update(int id, Book updatedBook) {
+        jdbcTemplate.update("UPDATE book set name_of_book=?, full_name=?,publishing_year=? where id=?",
+                updatedBook.getName_of_book(), updatedBook.getAuthor(),
+                updatedBook.getPublishing_year(), id);
     }
 
-    public void release(int id_book){
-        System.out.println(id_book);
-        jdbcTemplate.update("UPDATE book set id_person=null where id_book=?",id_book);
-        System.out.println("Четко");
+    public void updateId_person(int id, Book updatedBook) {
+        jdbcTemplate.update("UPDATE book set person_id=? where id=?",
+                updatedBook.getId(),id);
     }
 
-    public void delete(int id_book) {
-        jdbcTemplate.update("DELETE FROM book WHERE id_book=?",id_book);
+    public void release(int id){
+        jdbcTemplate.update("UPDATE book set person_id=null where id=?",id);
+    }
+
+    public void delete(int id) {
+        jdbcTemplate.update("DELETE FROM book WHERE id=?",id);
     }
 }

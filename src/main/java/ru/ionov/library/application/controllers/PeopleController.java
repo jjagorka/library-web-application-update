@@ -35,7 +35,7 @@ public class PeopleController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id,Model model){
-        model.addAttribute("books",bookDAO.showBusyBooks(id));
+        model.addAttribute("books",bookDAO.getBooksByPersonId(id));
         model.addAttribute("person", personDAO.show(id));
         return "people/show";
     }
@@ -67,7 +67,6 @@ public class PeopleController {
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("person")  @Valid Person person,
                          BindingResult bindingResult, @PathVariable("id") int id){
-        personValidator.validate(person,bindingResult);
 
         if (bindingResult.hasErrors())
             return "people/edit";

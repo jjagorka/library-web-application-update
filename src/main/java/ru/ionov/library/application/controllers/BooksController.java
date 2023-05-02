@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.ionov.library.application.dao.BookDAO;
 import ru.ionov.library.application.dao.PersonDAO;
 import ru.ionov.library.application.models.Book;
+import ru.ionov.library.application.models.Person;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
@@ -58,10 +60,15 @@ public class BooksController {
     }
 
         @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id,@ModelAttribute("newBook") Book book, Model model) {
+    public String show(@PathVariable("id") int id,Model model, @ModelAttribute("person") Person person) {
         model.addAttribute("book", bookDAO.show(id));
-        model.addAttribute("person", personDAO.showPersonWhoPutTheBook(id));
-        model.addAttribute("people",personDAO.index());
+        Optional<Person> bookOwner = bookDAO.getBookOwner(id);
+
+        if (bookOwner.isPresent())
+            model.addAttribute("owner", bookOwner.get());
+        else
+            model.addAttribute("people", personDAO.index());
+
         return "books/show";
     }
 

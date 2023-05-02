@@ -1,73 +1,58 @@
 package ru.ionov.library.application.models;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 public class Book {
-    private int id_book;
-    private int id_person = 0;
+    private int id;
 
-    @NotEmpty(message = "name of book should not be empty")
-    @Size(min = 1, max = 150, message = "name of book should be between 1 and 50 characters")
+    @NotEmpty(message = "Название книги не должно быть пустым")
+    @Size(min = 2, max = 100, message = "Название книги должно быть от 2 до 100 символов длиной")
     private String name_of_book;
-    @NotEmpty(message = "full name should not be empty")
-    @Size(min = 1, max = 150, message = "full name should be between 1 and 150 characters")
-    private String full_name;
+    @NotEmpty(message = "Автор не должен быть пустым")
+    @Size(min = 2, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
+    private String author;
 
+    @Max(value = 2023, message = "Год публикации должен быть не больше, чем 2023")
     private int publishing_year;
-    public Book(int id_book, String name_of_book, String full_name, int date_of_birth) {
-        this.id_book = id_book;
+    public Book(String name_of_book, String author, int publishing_year) {
         this.name_of_book = name_of_book;
-        this.full_name = full_name;
-        this.publishing_year = date_of_birth;
-    }
-
-    public Book(int id_book,int id_person, String name_of_book, String full_name, int date_of_birth) {
-        this.id_book = id_book;
-        this.id_person = id_person;
-        this.name_of_book = name_of_book;
-        this.full_name = full_name;
-        this.publishing_year = date_of_birth;
+        this.author = author;
+        this.publishing_year = publishing_year;
     }
 
     public Book() {
 
     }
 
-    public int getId_book() {
-        return id_book;
+    public int getId() {
+        return id;
     }
 
-    public int getId_person() {
-        return id_person;
-    }
 
     public String getName_of_book() {
         return name_of_book;
     }
 
-    public String getFull_name() {
-        return full_name;
+    public String getAuthor() {
+        return author;
     }
 
     public int getPublishing_year() {
         return publishing_year;
     }
 
-    public void setId_book(int id_book) {
-        this.id_book = id_book;
-    }
-
-    public void setId_person(int id_person) {
-        this.id_person = id_person;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setName_of_book(String name_of_book) {
         this.name_of_book = name_of_book;
     }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public void setPublishing_year(int publishing_year) {
