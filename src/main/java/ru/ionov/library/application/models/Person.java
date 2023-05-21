@@ -1,51 +1,83 @@
 package ru.ionov.library.application.models;
 
 
+import org.hibernate.annotations.Cascade;
+
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.List;
 
+@Entity
+@Table(name = "Person")
 public class Person {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotEmpty(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов длино")
-    private String full_name;
+    @Column(name = "full_name")
+    private String fullName;
 
     @Min(value = 1900, message = "Год рождения должен быть больше, чем 1900")
     @Max(value = 2023, message = "Год рождения должен быть не больше, чем 2023")
-    private int year_of_birth;
+    @Column(name = "year_of_birth")
+    private int yearOfBirth;
+
+    @OneToMany(mappedBy = "person")
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
+    private List<Book> books;
 
     public Person() {
 
     }
 
-    public Person(String full_name, int year_of_birth) {
-        this.full_name = full_name;
-        this.year_of_birth = year_of_birth;
+    public Person(String fullName, int yearOfBirth) {
+        this.fullName = fullName;
+        this.yearOfBirth = yearOfBirth;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getFull_name() {
-        return full_name;
+    public List<Book> getBooks() {
+        return books;
     }
 
-    public int getYear_of_birth() {
-        return year_of_birth;
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public int getYearOfBirth() {
+        return yearOfBirth;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
+    public void setFullName(String full_name) {
+        this.fullName = full_name;
     }
 
-    public void setYear_of_birth(int year_of_birth) {
-        this.year_of_birth = year_of_birth;
+    public void setYearOfBirth(int year_of_birth) {
+        this.yearOfBirth = year_of_birth;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", full_name='" + fullName + '\'' +
+                ", year_of_birth=" + yearOfBirth +
+                '}';
     }
 }

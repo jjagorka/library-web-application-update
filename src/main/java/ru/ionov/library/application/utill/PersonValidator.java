@@ -4,14 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.ionov.library.application.dao.PersonDAO;
 import ru.ionov.library.application.models.Person;
+import ru.ionov.library.application.services.PeopleService;
+
 @Component
 public class PersonValidator implements Validator {
-    private final PersonDAO personDAO;
+    private final PeopleService peopleService;
     @Autowired
-    public PersonValidator(PersonDAO personDAO) {
-        this.personDAO = personDAO;
+    public PersonValidator(PeopleService peopleService) {
+        this.peopleService = peopleService;
     }
 
     @Override
@@ -22,7 +23,7 @@ public class PersonValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Person person = (Person) o;
-        if (personDAO.getPersonByFullName(person.getFull_name()).isPresent())
-            errors.rejectValue("full_name","","This full_name was already used");
+        if (peopleService.findByFullName(person.getFullName()).isPresent())
+            errors.rejectValue("fullName","","Это ФИО уже занято!");
     }
 }

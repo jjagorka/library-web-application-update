@@ -7,9 +7,9 @@
 <body>
 
 <form th:method="POST" th:action="@{/books}" th:object="${book}">
-    <label for="name_of_book">Введите название книги: </label>
-    <input type="text" th:field="*{name_of_book}" id="name_of_book"/>
-    <div style="color:red" th:if="${#fields.hasErrors('name_of_book')}" th:errors="*{name_of_book}">Name Error</div>
+    <label for="nameOfBook">Введите название книги: </label>
+    <input type="text" th:field="*{nameOfBook}" id="nameOfBook"/>
+    <div style="color:red" th:if="${#fields.hasErrors('nameOfBook')}" th:errors="*{nameOfBook}">Name Error</div>
     <br/>
 
     <label for="author">Введите автора : </label>
@@ -17,9 +17,9 @@
     <div style="color:red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">author</div>
     <br/>
 
-    <label for="publishing_year">Введите год публикации: </label>
-    <input type="text" th:field="*{publishing_year}" id="publishing_year"/>
-    <div style="color:red" th:if="${#fields.hasErrors('publishing_year')}" th:errors="*{author}">author</div>
+    <label for="publishingYear">Введите год публикации: </label>
+    <input type="text" th:field="*{publishingYear}" id="publishingYear"/>
+    <div style="color:red" th:if="${#fields.hasErrors('publishingYear')}" th:errors="*{publishingYear}">author</div>
     <br/>
 
     <input type="submit" value="Добавить!"/>

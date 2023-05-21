@@ -1,25 +1,49 @@
 package ru.ionov.library.application.models;
 
+import sun.util.calendar.LocalGregorianCalendar;
+
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Calendar;
+import java.util.Date;
 
+@Entity
+@Table(name = "book")
 public class Book {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "name_of_book")
     @NotEmpty(message = "Название книги не должно быть пустым")
     @Size(min = 2, max = 100, message = "Название книги должно быть от 2 до 100 символов длиной")
-    private String name_of_book;
+    private String nameOfBook;
+    @Column(name = "author")
     @NotEmpty(message = "Автор не должен быть пустым")
     @Size(min = 2, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     private String author;
 
+    @Column(name = "publishing_year")
     @Max(value = 2023, message = "Год публикации должен быть не больше, чем 2023")
-    private int publishing_year;
-    public Book(String name_of_book, String author, int publishing_year) {
-        this.name_of_book = name_of_book;
+    private int publishingYear;
+
+    @Column(name = "taking_time")
+    private Date takingTime;
+
+    @Transient
+    private boolean isProphetic;
+
+    @ManyToOne
+    @JoinColumn(name="person_id",referencedColumnName = "id")
+    private Person person;
+
+    public Book(String nameOfBook, String author, int publishingYear) {
+        this.nameOfBook = nameOfBook;
         this.author = author;
-        this.publishing_year = publishing_year;
+        this.publishingYear = publishingYear;
     }
 
     public Book() {
@@ -30,32 +54,56 @@ public class Book {
         return id;
     }
 
+    public Date getTakingTime() {
+        return takingTime;
+    }
 
-    public String getName_of_book() {
-        return name_of_book;
+    public void setTakingTime(Date takingTime) {
+        this.takingTime = takingTime;
+    }
+
+    public String getNameOfBook() {
+        return nameOfBook;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public int getPublishing_year() {
-        return publishing_year;
+    public int getPublishingYear() {
+        return publishingYear;
     }
+
+    public boolean getIsProphetic() {
+        if (this.getTakingTime()!=null){
+            long milliseconds = new Date().getTime()-this.getTakingTime().getTime();
+            return (milliseconds / (24 * 60 * 60 * 1000))>10;
+        }
+        return false;
+    }
+
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setName_of_book(String name_of_book) {
-        this.name_of_book = name_of_book;
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public void setNameOfBook(String name_of_book) {
+        this.nameOfBook = name_of_book;
     }
 
     public void setAuthor(String author) {
         this.author = author;
     }
 
-    public void setPublishing_year(int publishing_year) {
-        this.publishing_year = publishing_year;
+    public void setPublishingYear(int publishing_year) {
+        this.publishingYear = publishing_year;
     }
 }
