@@ -3,6 +3,7 @@ package ru.ionov.library.application.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.ionov.library.application.models.Book;
@@ -10,28 +11,28 @@ import ru.ionov.library.application.models.Person;
 import ru.ionov.library.application.services.BooksService;
 import ru.ionov.library.application.services.PeopleService;
 
-import javax.validation.Valid;
 import java.util.Date;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
 public class BooksController {
-    private BooksService booksService;
-    private PeopleService peopleService;
+    private final BooksService booksService;
+    private final PeopleService peopleService;
     @Autowired
     public BooksController(BooksService booksService, PeopleService peopleService) {
         this.booksService = booksService;
         this.peopleService = peopleService;
     }
-    @GetMapping()
+    @GetMapping
     public String index(Model model) {
         model.addAttribute("books",booksService.findAll());
         for (Book bk : booksService.findAll()){
-            if (bk.getTakingTime()!=null){
-                long milliseconds = new Date().getTime()-bk.getTakingTime().getTime();
-                System.out.println((milliseconds / (24 * 60 * 60 * 1000)));
-            }
+            // It seems not necessary
+//            if (bk.getTakingTime()!=null){
+//                long milliseconds = new Date().getTime()-bk.getTakingTime().getTime();
+//                System.out.println((milliseconds / (24 * 60 * 60 * 1000)));
+//            }
         }
         return "books/index";
     }

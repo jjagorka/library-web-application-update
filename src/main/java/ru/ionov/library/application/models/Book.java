@@ -1,12 +1,11 @@
 package ru.ionov.library.application.models;
 
-import sun.util.calendar.LocalGregorianCalendar;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
-import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -31,10 +30,10 @@ public class Book {
     private int publishingYear;
 
     @Column(name = "taking_time")
-    private Date takingTime;
+    private LocalDateTime takingTime;
 
     @Transient
-    private boolean isProphetic;
+    private boolean isExpired;
 
     @ManyToOne
     @JoinColumn(name="person_id",referencedColumnName = "id")
@@ -54,11 +53,11 @@ public class Book {
         return id;
     }
 
-    public Date getTakingTime() {
+    public LocalDateTime getTakingTime() {
         return takingTime;
     }
 
-    public void setTakingTime(Date takingTime) {
+    public void setTakingTime(LocalDateTime takingTime) {
         this.takingTime = takingTime;
     }
 
@@ -74,10 +73,10 @@ public class Book {
         return publishingYear;
     }
 
-    public boolean getIsProphetic() {
+    public boolean getIsExpired() {
+        final int maxDayRead = 10;
         if (this.getTakingTime()!=null){
-            long milliseconds = new Date().getTime()-this.getTakingTime().getTime();
-            return (milliseconds / (24 * 60 * 60 * 1000))>10;
+            return LocalDateTime.now().isAfter(this.getTakingTime().plusDays(maxDayRead));
         }
         return false;
     }

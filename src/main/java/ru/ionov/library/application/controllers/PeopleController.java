@@ -1,5 +1,6 @@
 package ru.ionov.library.application.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,9 +10,6 @@ import ru.ionov.library.application.models.Person;
 import ru.ionov.library.application.services.BooksService;
 import ru.ionov.library.application.services.PeopleService;
 import ru.ionov.library.application.utill.PersonValidator;
-
-
-import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
@@ -27,7 +25,7 @@ public class PeopleController {
         this.personValidator = personValidator;
     }
 
-    @GetMapping()
+    @GetMapping
     public String index(Model model) {
         model.addAttribute("people",peopleService.findAll());
         return "people/index";
@@ -48,7 +46,7 @@ public class PeopleController {
     }
 
 
-    @PostMapping()
+    @PostMapping
     public String create(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult){
         personValidator.validate(person,bindingResult);

@@ -9,6 +9,7 @@ import ru.ionov.library.application.models.Book;
 import ru.ionov.library.application.models.Person;
 import ru.ionov.library.application.repositories.BooksRepository;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -75,7 +76,7 @@ public class BooksService {
         public void updatePersonId(int id, Person person) {
         Book book = booksRepository.findById(id).orElse(null);
         book.setPerson(person);
-        book.setTakingTime(new Date());
+        book.setTakingTime(LocalDateTime.now());
         save(book);
     }
 

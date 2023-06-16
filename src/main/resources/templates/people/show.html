@@ -17,7 +17,7 @@
   <b>Книги:</b>
   <br/>
   <table th:each="book : ${books}">
-      <p th:style="${book.getIsProphetic()}? 'color:red':'color:black'"
+      <p th:style="${book.getIsExpired()}? 'color:red':'color:black'"
           th:text="${book.getNameOfBook() + ', ' + book.getAuthor() + ', ' + book.getPublishingYear()}">book</p>
   </table>
   <hr/>
